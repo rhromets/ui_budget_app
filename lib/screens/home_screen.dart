@@ -1,4 +1,5 @@
 import 'package:budget_ui/data/data.dart';
+import 'package:budget_ui/helpers/color_helper.dart';
 import 'package:budget_ui/models/category_model.dart';
 import 'package:budget_ui/models/expense_model.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
   _buildCategory(Category category, double totalAmountSpent) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
+      padding: const EdgeInsets.all(15.0),
       height: 100.0,
       width: double.infinity,
       decoration: BoxDecoration(
@@ -50,6 +52,37 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ],
+          ),
+          const SizedBox(height: 10.0),
+          LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              final double maxBarWidth = constraints.maxWidth;
+              final double percent = (category.maxAmount! - totalAmountSpent) / category.maxAmount!;
+              double barWidth = percent * maxBarWidth;
+
+              if (barWidth < 0) {
+                barWidth = 0;
+              }
+              return Stack(
+                children: [
+                  Container(
+                    height: 20.0,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                  ),
+                  Container(
+                    height: 20.0,
+                    width: barWidth,
+                    decoration: BoxDecoration(
+                      color: getColor(context, percent),
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
         ],
       ),
